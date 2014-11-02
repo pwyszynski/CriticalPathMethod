@@ -4,15 +4,15 @@ class Node <
 	Struct.new(:index, :czas, :poprzednik, :est, :eet)
 
 	def print_node
-		p "#{index} | #{czas} | #{poprzednik} | #{est} | #{eet}"
+		puts "#{index}\t | #{czas}\t | #{poprzednik}   \t | #{est}\t | #{eet}\t"
 	end
 end
 
 
 graf = Array.new
 
-puts "Podaj liczbę węzłów:" 
-n = gets.chomp.to_i
+# puts "Podaj liczbę węzłów:" 
+# n = gets.chomp.to_i
 
 
 #Input przez usera:
@@ -39,6 +39,7 @@ graf.push(Node.new(7, 2, "5 6".split(' ').map(&:to_i)))
 
 
 graf.sort! { |a,b| a.index <=> b.index }
+puts "Indeks\t | Czas\t | Poprzednicy \t | EST\t | EET\t"
 graf.each do |x|
 	x.print_node
 end
@@ -74,10 +75,11 @@ for i in (0...numofnodes) do
 	end
 end
 
-p "\n\n"
-p "#{criticalnodes}"
-p "\n\n"
+puts "\n\n"
+puts "#{criticalnodes}"
+puts "\n\n"
 
+puts "Indeks\t | Czas\t | Poprzednicy \t | EST\t | EET\t"
 graf.each do |x|
 	x.print_node
 end
