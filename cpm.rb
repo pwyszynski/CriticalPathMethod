@@ -1,21 +1,22 @@
-require 'graph'
+#Useless, because graphing is not yet implemented
+#require 'graph'
 
 class Node <
 	Struct.new(:index, :czas, :poprzednik, :est, :eet)
 
+	#Printing node in preformatted table
 	def print_node
 		puts "#{index}\t | #{czas}\t | #{poprzednik}   \t | #{est}\t | #{eet}\t"
 	end
 end
 
-
+#Create new array
 graf = Array.new
 
+## User input (commented out for testing)
 # puts "Podaj liczbę węzłów:" 
 # n = gets.chomp.to_i
 
-
-#Input przez usera:
 # for i in (0...n) do
 # 	wz = Node.new
 # 	p "#{i}. indeks: "
@@ -28,6 +29,8 @@ graf = Array.new
 # 	graf.push(wz)
 # end
 
+## End of user input
+
 #Hardcoded input:
 graf.push(Node.new(1, 3, "".split(' ').map(&:to_i)))
 graf.push(Node.new(2, 1, "1".split(' ').map(&:to_i)))
@@ -36,31 +39,38 @@ graf.push(Node.new(4, 1, "2 3".split(' ').map(&:to_i)))
 graf.push(Node.new(5, 9, "4".split(' ').map(&:to_i)))
 graf.push(Node.new(6, 5, "4".split(' ').map(&:to_i)))
 graf.push(Node.new(7, 2, "5 6".split(' ').map(&:to_i)))
+#End of hardcoded input
 
-
+#Sortowanie grafu
 graf.sort! { |a,b| a.index <=> b.index }
-# drukowanie przed wykonaniem algorytmu
+
+# Printing before algorithm runs
 # puts "Indeks\t | Czas\t | Poprzednicy \t | EST\t | EET\t"
 # graf.each do |x|
 # 	x.print_node
 # end
 
+#Number of nodes for loops
 numofnodes = graf.length
+#Empty string for nodes on critical path
 criticalnodes = ""
 
-# Magic - do not touch
+# --------- Magic - do not touch
 for i in (0...numofnodes) do
+	# If there are no predecessors (starting node):
 	if graf[i].poprzednik.length == 0 then
 		graf[i].est = 0
 		graf[i].eet = graf[i].czas
 		criticalnodes = criticalnodes + "#{graf[i].index}"
 	end
+	# If there is only one predecessor (nothing to compare):
 	if graf[i].poprzednik.length == 1 then
 		poprz = graf[i].poprzednik[0].to_i
 		graf[i].est = graf[poprz-1].eet
 		graf[i].eet = graf[i].est + graf[i].czas
 		criticalnodes = criticalnodes + "#{graf[poprz-1].index}"
 	end
+	# If there are more than one predecessor (find highest EET of predecessors):
 	if graf[i].poprzednik.length > 1 then
 		dlugpoprzed = graf[i].poprzednik.length
 		indmax = 0 
@@ -75,15 +85,19 @@ for i in (0...numofnodes) do
 		graf[i].eet = graf[i].est + graf[i].czas
 	end
 end
+# --------- End of magic - feel free to touch
+
+# Add last node to the critical nodes list:
 criticalnodes = criticalnodes + "#{numofnodes}"
+
+# Get the latest node's EET 
 criticaltime = graf.last.eet
-# End of magic - feel free to touch
 
-#Usunięcie zbędnych elementów ze stringa
 
-puts "\n\n"
-
+# Leave only unique nodes in an array of integers
 criticalnodes = criticalnodes.chars.map(&:to_i).uniq
+
+# Print everything useful
 puts "Sciezka krytyczna: #{criticalnodes}"
 puts "Czas krytyczny: #{criticaltime}"
 puts "\n\n"
@@ -92,18 +106,3 @@ puts "Indeks\t | Czas\t | Poprzednicy \t | EST\t | EET\t"
 graf.each do |x|
 	x.print_node
 end
-# digraph do
-#       # many ways to access/create edges and nodes
-#       edge "a", "b"
-#       self["b"]["c"]
-#       node("c") >> "a"
-
-#       square   << node("a")
-#       triangle << node("b")
-
-#       red   << node("a") << edge("a", "b")
-#       green << node("b") << edge("b", "c")
-#       blue  << node("c") << edge("c", "a")
-
-#       save "simple_example", "png"
-# end
