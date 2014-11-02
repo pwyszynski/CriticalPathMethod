@@ -39,15 +39,16 @@ graf.push(Node.new(7, 2, "5 6".split(' ').map(&:to_i)))
 
 
 graf.sort! { |a,b| a.index <=> b.index }
-puts "Indeks\t | Czas\t | Poprzednicy \t | EST\t | EET\t"
-graf.each do |x|
-	x.print_node
-end
+# drukowanie przed wykonaniem algorytmu
+# puts "Indeks\t | Czas\t | Poprzednicy \t | EST\t | EET\t"
+# graf.each do |x|
+# 	x.print_node
+# end
 
 numofnodes = graf.length
 criticalnodes = ""
 
-
+# Magic - do not touch
 for i in (0...numofnodes) do
 	if graf[i].poprzednik.length == 0 then
 		graf[i].est = 0
@@ -58,7 +59,7 @@ for i in (0...numofnodes) do
 		poprz = graf[i].poprzednik[0].to_i
 		graf[i].est = graf[poprz-1].eet
 		graf[i].eet = graf[i].est + graf[i].czas
-		criticalnodes = criticalnodes + "#{graf[i].index}"
+		criticalnodes = criticalnodes + "#{graf[poprz-1].index}"
 	end
 	if graf[i].poprzednik.length > 1 then
 		dlugpoprzed = graf[i].poprzednik.length
@@ -70,13 +71,21 @@ for i in (0...numofnodes) do
 			end
 		end
 		graf[i].est = graf[indmax].eet
-		criticalnodes = criticalnodes + "#{graf[i].index}"
+		criticalnodes = criticalnodes + "#{graf[indmax].index}"
 		graf[i].eet = graf[i].est + graf[i].czas
 	end
 end
+criticalnodes = criticalnodes + "#{numofnodes}"
+criticaltime = graf.last.eet
+# End of magic - feel free to touch
+
+#Usunięcie zbędnych elementów ze stringa
 
 puts "\n\n"
-puts "#{criticalnodes}"
+
+criticalnodes = criticalnodes.chars.map(&:to_i).uniq
+puts "Sciezka krytyczna: #{criticalnodes}"
+puts "Czas krytyczny: #{criticaltime}"
 puts "\n\n"
 
 puts "Indeks\t | Czas\t | Poprzednicy \t | EST\t | EET\t"
