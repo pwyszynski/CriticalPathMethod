@@ -52,6 +52,18 @@ graf.sort! { |a,b| a.index <=> b.index }
 
 #Number of nodes for loops
 numofnodes = graf.length
+
+# Checking for cycled graphs
+for i in (0...graf.length) do
+	dlpoprzed = graf[i].poprzednik.length
+	for j in (0...dlpoprzed) do
+		if graf[i].index <= graf[i].poprzednik[j] then
+			puts "Podany graf jest cykliczny. Wychodzę z programu."
+			exit
+		end
+	end
+end
+
 #Empty string for nodes on critical path
 criticalnodes = ""
 
